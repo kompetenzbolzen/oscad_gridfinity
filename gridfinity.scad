@@ -88,6 +88,19 @@ module stacking_lip(units_x, units_y) {
   }
 }
 
+module cutout_slot(l, rx = 0) {
+  rotate([rx,-90,0]) linear_extrude(l) polygon([[0,-0.25],[0,0.25],[0.25,0]]);
+}
+
+module bottom_cutout(units_x, units_y) {
+  if (units_y > 1) for (i = [1:units_y - 1]) {
+    translate([units_x * width - width/2, i * width - width/2, 4.749]) cutout_slot(width * units_x);
+  }
+  if(units_x > 1) for (i = [1:units_x - 1]) {
+    translate([i * width - width/2, units_y * width - width/2, 4.749]) cutout_slot(width * units_y, rx=90);
+  }
+}
+
 module gridfinity(units_x, units_y, units_z, lip = true, magnets = false) {
   for (ux = [0:units_x -1]) {
     for (uy = [0:units_y -1]) {
@@ -95,9 +108,12 @@ module gridfinity(units_x, units_y, units_z, lip = true, magnets = false) {
     }
   }
   if (units_z > 0) {
-    translate([coord_centered(units_x), coord_centered(units_y), 4.75]) {
-      extr = units_z * height - 4.75;
-      linear_extrude(extr) rounded_square(units_x * width - 0.5, units_y * width - 0.5, rounding);
+    difference() {
+      translate([coord_centered(units_x), coord_centered(units_y), 4.75]) {
+        extr = units_z * height - 4.75;
+        linear_extrude(extr) rounded_square(units_x * width - 0.5, units_y * width - 0.5, rounding);
+      }
+      bottom_cutout(units_x, units_y);
     }
   }
   if (lip && units_z > 0) // Just to safeguard. h=0 is not intended to be used with lip.
