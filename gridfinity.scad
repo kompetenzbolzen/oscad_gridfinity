@@ -87,18 +87,20 @@ module stacking_lip(units_x, units_y) {
 		stacking_lip_negative(units_x, units_y);
 	}
 }
+
 module gridfinity(units_x, units_y, units_z, lip = true, magnets = false) {
 	for (ux = [0:units_x -1]) {
 		for (uy = [0:units_y -1]) {
 			translate([ux * width, uy * width,0]) base(magnets = magnets);
 		}
 	}
-	if (units_z > 0)
-	translate([coord_centered(units_x), coord_centered(units_y), 4.75]) {
-		extr = units_z * height - 4.75;
-		linear_extrude(extr) rounded_square(units_x * width - 0.5, units_y * width - 0.5, rounding);
+	if (units_z > 0) {
+		translate([coord_centered(units_x), coord_centered(units_y), 4.75]) {
+			extr = units_z * height - 4.75;
+			linear_extrude(extr) rounded_square(units_x * width - 0.5, units_y * width - 0.5, rounding);
+		}
 	}
-	if (lip)
+	if (lip && units_z > 0) // Just to safeguard. h=0 is not intended to be used with lip.
 		translate([coord_centered(units_x), coord_centered(units_y), units_z * height])
 			stacking_lip(units_x, units_y);
 }
