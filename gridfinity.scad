@@ -7,6 +7,8 @@ width    = 42;
 width_tolerance    = 41.5;
 rounding = 3.75;
 
+minimal_thickness = 1.5;
+
 module rounding(r,angle) {
   rotate(angle,[0,0,1])
   translate([-r + 0.01, -r + 0.01])
@@ -28,9 +30,9 @@ module rounded_square(lx, ly, r) {
   }
 }
 
-module magnet_hole(h = 0) {
+module magnet_hole(screw = 0) {
   linear_extrude(2.5) circle(3.25);
-  translate([0,0,2.5]) linear_extrude(h) circle(1.5);
+  translate([0,0,2.5]) linear_extrude(screw) circle(1.5);
 }
 
 module base_solid() {
@@ -130,6 +132,10 @@ module bottom_cutout(units_x, units_y) {
 }
 
 module gridfinity(units_x, units_y, units_z, lip = true, magnets = false) {
+  units_x = floor(abs(units_x));
+  units_y = floor(abs(units_y));
+  units_z = floor(abs(units_z));
+
   // Bases
   for (ux = [0:units_x -1]) {
     for (uy = [0:units_y -1]) {
@@ -138,15 +144,13 @@ module gridfinity(units_x, units_y, units_z, lip = true, magnets = false) {
   }
 
   // Solid Block
-  if (units_z > 0) {
-    difference() {
-      translate([coord_centered(units_x), coord_centered(units_y), 4.75]) {
-        extr = units_z * height - 4.75;
-        linear_extrude(extr)
-          rounded_square(units_x * width - 0.5, units_y * width - 0.5, rounding);
-      }
-      bottom_cutout(units_x, units_y);
+  difference() {
+    translate([coord_centered(units_x), coord_centered(units_y), 4.75]) {
+      extr = max(units_z * height - 4.75, minimal_thickness);
+      linear_extrude(extr)
+        rounded_square(units_x * width - 0.5, units_y * width - 0.5, rounding);
     }
+    bottom_cutout(units_x, units_y);
   }
 
   // Stacking Lip
