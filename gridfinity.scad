@@ -92,30 +92,64 @@ module cutout_slot(l, rx = 0) {
   rotate([rx,-90,0]) linear_extrude(l) polygon([[0,-0.25],[0,0.25],[0.25,0]]);
 }
 
+// Cut out a cross with edges sloped like the rounded corners of the base
+module cutout_cross() {
+    r = rounding + 0.25;
+
+    difference() {
+      linear_extrude(0.25) square([r * 2, r * 2], center=true);
+      union() {
+        for(c = [[r,r], [r,-r], [-r,r], [-r,-r]]) translate(c) hull() {
+          linear_extrude(0.01) circle(rounding);
+          translate([0,0,0.25]) linear_extrude(0.01) circle(rounding + 0.25);
+        }
+      }
+    }
+}
+
 module bottom_cutout(units_x, units_y) {
   if (units_y > 1) for (i = [1:units_y - 1]) {
-    translate([units_x * width - width/2, i * width - width/2, 4.749]) cutout_slot(width * units_x);
+    translate([units_x * width - width/2, i * width - width/2, 4.749])
+      cutout_slot(width * units_x);
   }
   if(units_x > 1) for (i = [1:units_x - 1]) {
-    translate([i * width - width/2, units_y * width - width/2, 4.749]) cutout_slot(width * units_y, rx=90);
+    translate([i * width - width/2, units_y * width - width/2, 4.749])
+      cutout_slot(width * units_y, rx=90);
+  }
+
+  for (ux = [0:units_x]) {
+    for (uy = [0:units_y]) {
+      // we don't need the cross in the corners
+      if (!( (ux == 0       && uy == 0      ) ||
+             (ux == units_x && uy == units_y) ||
+             (ux == 0       && uy == units_y) ||
+             (ux == units_x && uy == 0      ) ))
+        translate([ux * width - width/2, uy * width - width/2, 4.749]) cutout_cross();
+    }
   }
 }
 
 module gridfinity(units_x, units_y, units_z, lip = true, magnets = false) {
+  // Bases
   for (ux = [0:units_x -1]) {
     for (uy = [0:units_y -1]) {
       translate([ux * width, uy * width,0]) base(magnets = magnets);
     }
   }
+
+  // Solid Block
   if (units_z > 0) {
     difference() {
       translate([coord_centered(units_x), coord_centered(units_y), 4.75]) {
         extr = units_z * height - 4.75;
-        linear_extrude(extr) rounded_square(units_x * width - 0.5, units_y * width - 0.5, rounding);
+        linear_extrude(extr)
+          rounded_square(units_x * width - 0.5, units_y * width - 0.5, rounding);
       }
       bottom_cutout(units_x, units_y);
     }
   }
+
+  // Stacking Lip
   if (lip && units_z > 0) // Just to safeguard. h=0 is not intended to be used with lip.
     translate([coord_centered(units_x), coord_centered(units_y), units_z * height])
       stacking_lip(units_x, units_y);
