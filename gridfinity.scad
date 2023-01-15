@@ -9,6 +9,16 @@ rounding = 3.75;
 
 minimal_thickness = 1.5;
 
+// Get top of GridFinity object from GF units
+function gf_top(units_z) =
+  max(units_z * height - 4.75, minimal_thickness) + 4.75;
+
+// Get center of GridFinity object
+function gf_center(units_x, units_y) = [
+  (units_x * width - 0.5) / 2 - width/2,
+  (units_y * width - 0.5) / 2 - width/2
+];
+
 module rounding(r,angle) {
   rotate(angle,[0,0,1])
   translate([-r + 0.01, -r + 0.01])
