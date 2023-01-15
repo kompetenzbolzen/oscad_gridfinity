@@ -1,37 +1,49 @@
 SCAD=openscad
 
 STLOPTS= --export-format binstl
-PNGOPTS= --viewall --autocenter --imgsize 400,400 --render
+PNGOPTS= --colorscheme BeforeDawn --viewall --autocenter --imgsize 800,800 \
+	 --render
+
+STLDIR = stlout
+PNGDIR = pngout
 
 SRC = $(wildcard *.scad)
 
-STL = $(SRC:.scad=.stl)
-PNG = $(SRC:.scad=.png)
+STL = $(addprefix $(STLDIR)/,$(SRC:.scad=.stl))
+PNG = $(addprefix $(PNGDIR)/,$(SRC:.scad=.png))
 
+.PHONY: _default
 _default: stl
 
+.PHONY: all
 all: clean stl png
 
-stl: $(STL)
+.PHONY: stl
+stl: $(STLDIR) $(STL)
 
-gridfinity.stl: gridfinity.scad
+$(STLDIR)/gridfinity.stl: gridfinity.scad
 	@echo
 
-%.stl: %.scad
+$(STLDIR)/%.stl: %.scad
 	@echo [ STL ] $<
 	@$(SCAD) $(STLOPTS) -o $@ $<
 
+png: $(PNGDIR) $(PNG)
 
-png: $(PNG)
-
-gridfinity.png: gridfinity.scad
+$(PNGDIR)/gridfinity.png: gridfinity.scad
 	@echo
 
-%.png: %.scad
+$(PNGDIR)/%.png: %.scad
 	@echo [ PNG ] $<
-	@$(SCAD) $(SCADOPTS) -o $@ $<
+	@$(SCAD) $(PNGOPTS) -o $@ $<
+
+$(PNGDIR):
+	@mkdir -p $(PNGDIR)/
+
+$(STLDIR):
+	@mkdir -p $(STLDIR)/
 
 .PHONY: clean
 clean:
-	@rm -f *.stl
-	@rm -f *.png
+	@rm -rf $(STLDIR)/
+	@rm -rf $(PNGDIR)/
