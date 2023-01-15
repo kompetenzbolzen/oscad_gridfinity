@@ -21,6 +21,15 @@ use <gridfinity.scad>
 gridfinity(2, 1, 2, lip=true, magnets=false);
 ```
 
+## Building
+
+STLs and PNGs can be built with GNU make by just running
+`make stl` and `make png`
+respectively.
+
+T build a single object, use the desired file as a target:
+`make example.stl`
+
 ## License
 
 Licensed under the MIT License. Consult `LICENSE`.
