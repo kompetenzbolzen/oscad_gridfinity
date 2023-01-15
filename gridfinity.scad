@@ -1,4 +1,4 @@
-$fn = 30;
+$fn = 50;
 
 // https://gridfinity.xyz/specification/
 
@@ -13,11 +13,18 @@ minimal_thickness = 1.5;
 function gf_top(units_z) =
   max(units_z * height - 4.75, minimal_thickness) + 4.75;
 
+function gf_top_vec(units_z) =
+  [0,0,gf_top(units_z)];
+
 // Get center of GridFinity object
 function gf_center(units_x, units_y) = [
   (units_x * width - 0.5) / 2 - width/2,
   (units_y * width - 0.5) / 2 - width/2
 ];
+
+function flatten(l) = [ for (a = l) for (b = a) b ] ;
+function gf_top_center(units_x, units_y, units_z) =
+  flatten([gf_center(units_x,units_y),gf_top(units_z)]);
 
 module rounding(r,angle) {
   rotate(angle,[0,0,1])
