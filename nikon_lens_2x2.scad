@@ -11,7 +11,7 @@ lip_height = 1.9;
 lip_positions = [[50,-35], [55,-155], [55,-270]];
 lip_offset = 0.8;
 
-flange_height = 10;
+flange_height = 15;
 
 size_x = 2;
 size_y = 2;
