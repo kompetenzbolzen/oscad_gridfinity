@@ -9,9 +9,11 @@ Create fully parameterized Templates for GridFinity.
 `gridfinity(<x>, <y>, <z>, lip=<>, magnets=<>);`
 
 * **x, y** Vertical size in *GridFinity* units
-* **z** Height in GridFinity units (`z * 7mm`). This in excluding the base and stacking lip.
-* **lip** `true/false` Sets wether to put a stacking lip on top. Only works with z >= 1.
-* **magnets** `true/false` Sets wether to put holes for magnets in the base.
+* **z** Height in GridFinity units (`z * 7mm`). This is excluding the base and stacking lip.
+* **lip** `true/false` Sets wether to put a stacking lip on top. Only works with z >= 1. Default `true`
+* **magnets** `true/false` Sets wether to put holes for magnets in the base. Default `false`
+* **fill** `true/false` Sets wether the created object is solid or hollow. Default `true`
+* **bottom_height** Height offset for floor. Only applicable, if `fill == false`. Default `0`
 
 ## Example
 

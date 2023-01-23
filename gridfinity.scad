@@ -148,7 +148,7 @@ module bottom_cutout(units_x, units_y) {
   }
 }
 
-module gridfinity(units_x, units_y, units_z, lip = true, magnets = false) {
+module gridfinity(units_x, units_y, units_z, lip = true, magnets = false, fill = true, bottom_height = 0) {
   units_x = floor(abs(units_x));
   units_y = floor(abs(units_y));
   units_z = floor(abs(units_z));
@@ -167,7 +167,19 @@ module gridfinity(units_x, units_y, units_z, lip = true, magnets = false) {
       linear_extrude(extr)
         rounded_square(units_x * width - 0.5, units_y * width - 0.5, rounding);
     }
-    bottom_cutout(units_x, units_y);
+    union(){
+      bottom_cutout(units_x, units_y);
+
+      // remove solid block if set, leave walls
+      if (! fill) {
+        wall_thickness = 2.95; // thickness of stacking lip
+        extr = units_z * height - (4.75 + minimal_thickness) - bottom_height + 0.01;
+
+        translate([coord_centered(units_x), coord_centered(units_y), 4.75 + minimal_thickness + bottom_height])
+          linear_extrude(extr)
+            rounded_square(units_x * width - wall_thickness * 2, units_y * width - wall_thickness * 2, 0.7);
+      }
+    }
   }
 
   // Stacking Lip
