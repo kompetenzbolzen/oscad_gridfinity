@@ -1,15 +1,21 @@
 use <gridfinity.scad>
 
-mm_1_4_inch = 6.35;
-
-diam = mm_1_4_inch;
-wall = 1.5;
-
-bit_depth = 5;
+// wrenchsize of the bits. Default is 6.35, which is
+// for standard 1/4 inch bits. Smaller bits are mostly 4mm.
+wrench_size = 6.35;
 
 // size in GF units
-ux = 2;
-uy = 2;
+ux = 1;
+uy = 1;
+
+// depth of the hexagon
+bit_depth = 5;
+
+// Wall between bits
+wall = 1.5;
+
+tolerance = 0.5;
+diam = wrench_size + tolerance;
 
 function r_from_d(d) = d/2 / sin(60);
 function staggered_offset(d, w) = r_from_d(d)*1.5 + sin(60) * w;
@@ -54,6 +60,7 @@ module honeycomb_fit_center(x, y, d, w) {
 
 difference() {
   gridfinity(ux, uy, 3, lip=true, magnets=false, fill = false, bottom_height = bit_depth);
+
   translate(gf_inner_origin()) translate(gf_top_vec(0))
     linear_extrude(bit_depth + 0.01)
       honeycomb_fit_center(gf_inner(ux), gf_inner(uy), diam,wall);
