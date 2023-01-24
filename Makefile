@@ -24,6 +24,17 @@ stl: $(STLDIR) $(STL)
 $(STLDIR)/gridfinity.stl: gridfinity.scad
 	@echo
 
+$(STLDIR)/bitstorage_1x2.stl: bitstorage.scad
+	@echo [ STL ] $<
+	@$(SCAD) $(STLOPTS) -D ux=2 -o $@ $<
+
+$(STLDIR)/bitstorage_1x1.stl: bitstorage.scad
+	@echo [ STL ] $<
+	@$(SCAD) $(STLOPTS) -D ux=1 -o $@ $<
+
+$(STLDIR)/bitstorage.stl: $(STLDIR)/bitstorage_1x1.stl $(STLDIR)/bitstorage_1x2.stl
+	@echo
+
 $(STLDIR)/%.stl: %.scad
 	@echo [ STL ] $<
 	@$(SCAD) $(STLOPTS) -o $@ $<
