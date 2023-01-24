@@ -12,6 +12,9 @@ SRC = $(wildcard *.scad)
 STL = $(addprefix $(STLDIR)/,$(SRC:.scad=.stl))
 PNG = $(addprefix $(PNGDIR)/,$(SRC:.scad=.png))
 
+BITSTORAGE_SIZES = $(STLDIR)/bitstorage_1x1x6.35.stl $(STLDIR)/bitstorage_1x2x6.35.stl $(STLDIR)/bitstorage_2x2x6.35.stl \
+	$(STLDIR)/bitstorage_1x1x4.stl $(STLDIR)/bitstorage_1x2x4.stl $(STLDIR)/bitstorage_2x2x4.stl
+
 .PHONY: _default
 _default: stl
 
@@ -24,15 +27,14 @@ stl: $(STLDIR) $(STL)
 $(STLDIR)/gridfinity.stl: gridfinity.scad
 	@echo
 
-$(STLDIR)/bitstorage_1x2.stl: bitstorage.scad
-	@echo [ STL ] $<
-	@$(SCAD) $(STLOPTS) -D ux=2 -o $@ $<
+$(STLDIR)/bitstorage_%.stl: bitstorage.scad
+	@echo [ STL ] $< $*
+	@$(SCAD) $(STLOPTS) \
+		-D ux=$(firstword $(subst x, ,$*)) -D uy=$(word 2,$(subst x, ,$*)) \
+		-D wrench_size=$(word 3,$(subst x, ,$*))\
+		-o $@ $<
 
-$(STLDIR)/bitstorage_1x1.stl: bitstorage.scad
-	@echo [ STL ] $<
-	@$(SCAD) $(STLOPTS) -D ux=1 -o $@ $<
-
-$(STLDIR)/bitstorage.stl: $(STLDIR)/bitstorage_1x1.stl $(STLDIR)/bitstorage_1x2.stl
+$(STLDIR)/bitstorage.stl: $(BITSTORAGE_SIZES)
 	@echo
 
 $(STLDIR)/%.stl: %.scad
