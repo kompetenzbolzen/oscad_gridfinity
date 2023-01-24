@@ -8,6 +8,7 @@ width_tolerance    = 41.5;
 rounding = 3.75;
 
 minimal_thickness = 1.5;
+wall_thickness = 2.95; // thickness of stacking lip
 
 // Get top of GridFinity object from GF units
 function gf_top(units_z) =
@@ -25,6 +26,11 @@ function gf_center(units_x, units_y) = [
 function flatten(l) = [ for (a = l) for (b = a) b ] ;
 function gf_top_center(units_x, units_y, units_z) =
   flatten([gf_center(units_x,units_y),gf_top(units_z)]);
+
+function gf_inner_origin() = [-20.75 + wall_thickness,-20.75 + wall_thickness];
+
+// usable inner space
+function gf_inner(units_l) = 42*units_l -1 - 2*wall_thickness;
 
 module rounding(r,angle) {
   rotate(angle,[0,0,1])
@@ -172,7 +178,6 @@ module gridfinity(units_x, units_y, units_z, lip = true, magnets = false, fill =
 
       // remove solid block if set, leave walls
       if (! fill) {
-        wall_thickness = 2.95; // thickness of stacking lip
         extr = units_z * height - (4.75 + minimal_thickness) - bottom_height + 0.01;
 
         translate([coord_centered(units_x), coord_centered(units_y), 4.75 + minimal_thickness + bottom_height])
