@@ -7,6 +7,9 @@ wrench_size = 6.35;
 // size in GF units
 ux = 1;
 uy = 1;
+uz = 3;
+
+magnets = false;
 
 // depth of the hexagon
 bit_depth = 5;
@@ -59,7 +62,7 @@ module honeycomb_fit_center(x, y, d, w) {
 }
 
 difference() {
-  gridfinity(ux, uy, 3, lip=true, magnets=false, fill = false, bottom_height = bit_depth);
+  gridfinity(ux, uy, uz, lip=true, magnets=magnets, fill = false, bottom_height = bit_depth);
 
   translate(gf_inner_origin()) translate(gf_top_vec(0))
     linear_extrude(bit_depth + 0.01)
