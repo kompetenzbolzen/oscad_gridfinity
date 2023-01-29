@@ -17,7 +17,7 @@ bit_depth = 5;
 // Wall between bits
 wall = 1.5;
 
-tolerance = 0.5;
+tolerance = 0.35;
 diam = wrench_size + tolerance;
 
 function r_from_d(d) = d/2 / sin(60);
