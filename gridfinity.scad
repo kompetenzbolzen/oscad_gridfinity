@@ -32,6 +32,8 @@ function gf_inner_origin() = [-20.75 + wall_thickness,-20.75 + wall_thickness];
 // usable inner space
 function gf_inner(units_l) = 42*units_l -1 - 2*wall_thickness;
 
+function gf_offset(units_x, units_y, units_z=0) = [width * units_x, width * units_y, height * units_z];
+
 module rounding(r,angle) {
   rotate(angle,[0,0,1])
   translate([-r + 0.01, -r + 0.01])
@@ -154,6 +156,10 @@ module bottom_cutout(units_x, units_y) {
   }
 }
 
+module top_block_2d(units_x, units_y) {
+  rounded_square(units_x * width - 0.5, units_y * width - 0.5, rounding);
+}
+
 module gridfinity(units_x, units_y, units_z, lip = true, magnets = false, fill = true, bottom_height = 0) {
   units_x = floor(abs(units_x));
   units_y = floor(abs(units_y));
@@ -171,7 +177,7 @@ module gridfinity(units_x, units_y, units_z, lip = true, magnets = false, fill =
     translate([coord_centered(units_x), coord_centered(units_y), 4.75]) {
       extr = max(units_z * height - 4.75, minimal_thickness);
       linear_extrude(extr)
-        rounded_square(units_x * width - 0.5, units_y * width - 0.5, rounding);
+        top_block_2d(units_x, units_y);
     }
     union(){
       bottom_cutout(units_x, units_y);
