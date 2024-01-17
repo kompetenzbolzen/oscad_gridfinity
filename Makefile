@@ -63,7 +63,7 @@ $(STLDIR)/simplebox_%.stl: simplebox.scad
 $(STLDIR)/simplebox.stl: $(SIMPLEBOX_SIZES)
 	@echo
 
-$(STLDIR)/case_clip_%.stl: case_clip.scad
+$(STLDIR)/case_clip_%.stl: case_clip.scad case_base.scad
 	@echo [ STL ] $< $*
 	@$(SCAD) $(STLOPTS) \
 		-D height=$* \
