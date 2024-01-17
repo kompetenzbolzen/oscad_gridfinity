@@ -29,7 +29,8 @@ clip_top_width = 15;
 // should be aroung 7, since we use 1GF unit as base.
 clip_mount_resulting_offset = 8.5;
 clip_bottom_angle = 220;
-clip_top_angle = 180;
+clip_top_angle = 160;
+clip_handle_length = 8;
 
 
 module top_block(units_x, units_y,) {
@@ -87,8 +88,12 @@ module clip(units_z) {
   translate([clip_width - clip_bottom_width,0,0])
     round_clipper(-clip_bottom_angle, clip_bottom_width);
 
-  translate([clip_width/2 - clip_top_width/2, resulting_height,0])
+  translate([clip_width/2 - clip_top_width/2, resulting_height,0]) {
     round_clipper(clip_top_angle,clip_top_width);
+    // Handle
+    translate([0,-clip_thickness,-clip_handle_length])
+      cube([clip_top_width,clip_thickness,clip_handle_length]);
+  }
 }
 
 base_plate();
