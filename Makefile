@@ -15,6 +15,11 @@ PNG = $(addprefix $(PNGDIR)/,$(SRC:.scad=.png))
 BITSTORAGE_SIZES = $(STLDIR)/bitstorage_1x1x6.35.stl $(STLDIR)/bitstorage_1x2x6.35.stl $(STLDIR)/bitstorage_2x2x6.35.stl \
 	$(STLDIR)/bitstorage_1x1x4.stl $(STLDIR)/bitstorage_1x2x4.stl $(STLDIR)/bitstorage_2x2x4.stl
 
+SIMPLEBOX_SIZES = $(STLDIR)/simplebox_1x1x4.stl $(STLDIR)/simplebox_2x1x4.stl $(STLDIR)/simplebox_2x1x3.stl \
+		  $(STLDIR)/simplebox_3x1x4.stl $(STLDIR)/simplebox_3x1x3.stl $(STLDIR)/simplebox_2x2x4.stl \
+		  $(STLDIR)/simplebox_2x2x4.stl
+
+
 .PHONY: _default
 _default: stl
 
@@ -34,7 +39,18 @@ $(STLDIR)/bitstorage_%.stl: bitstorage.scad
 		-D wrench_size=$(word 3,$(subst x, ,$*))\
 		-o $@ $<
 
+
 $(STLDIR)/bitstorage.stl: $(BITSTORAGE_SIZES)
+	@echo
+
+$(STLDIR)/simplebox_%.stl: simplebox.scad
+	@echo [ STL ] $< $*
+	@$(SCAD) $(STLOPTS) \
+		-D ux=$(firstword $(subst x, ,$*)) -D uy=$(word 2,$(subst x, ,$*)) \
+		-D uz=$(word 3,$(subst x, ,$*))\
+		-o $@ $<
+
+$(STLDIR)/simplebox.stl: $(SIMPLEBOX_SIZES)
 	@echo
 
 $(STLDIR)/%.stl: %.scad
