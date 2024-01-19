@@ -26,11 +26,13 @@ clip_tolerance = 0.5;
 
 clip_bottom_width = 10;
 clip_top_width = 15;
-// should be aroung 7, since we use 1GF unit as base.
-clip_mount_resulting_offset = 8.5;
-clip_bottom_angle = 220;
-clip_top_angle = 160;
+// This is basically the height
+clip_mount_resulting_offset = 9;
+clip_bottom_angle = 225;
+clip_top_angle = 150;
 clip_handle_length = 8;
+clip_handle_angle = 30;
+clip_straight_part = 4;
 
 
 module top_block(units_x, units_y,) {
@@ -73,15 +75,31 @@ module round_clipper(angle, width) {
 
 module clip(units_z) {
   resulting_height = units_z*7 + clip_mount_resulting_offset;
+  straight_part=clip_straight_part;
+  straight_offset = resulting_height - straight_part;
 
   linear_extrude(clip_thickness) {
-  polygon([[0,0],[clip_bottom_width,0],
-          [clip_width/2 + clip_top_width/2,resulting_height],
-          [clip_width/2 - clip_top_width/2,resulting_height] ]);
+    polygon([[0,straight_part],[clip_bottom_width,straight_part],
+            [clip_width/2 + clip_top_width/2,straight_offset],
+            [clip_width/2 - clip_top_width/2,straight_offset] ]);
 
-  polygon([[clip_width - clip_bottom_width,0],[clip_width ,0],
-          [clip_width/2 + clip_top_width/2,resulting_height],
-          [clip_width/2 - clip_top_width/2,resulting_height] ]);
+    polygon([[clip_width - clip_bottom_width,straight_part],[clip_width ,straight_part],
+            [clip_width/2 + clip_top_width/2,straight_offset],
+            [clip_width/2 - clip_top_width/2,straight_offset] ]);
+
+    //Straight end Bottom
+    polygon([[0,0],[clip_bottom_width,0],[clip_bottom_width,straight_part],[0,straight_part]]);
+
+    polygon([[clip_width - clip_bottom_width,0],[clip_width ,0],
+             [clip_width ,straight_part],[clip_width - clip_bottom_width,straight_part]]);
+
+    // straight end Top
+    polygon([
+            [clip_width/2 + clip_top_width/2,straight_offset],
+            [clip_width/2 - clip_top_width/2,straight_offset],
+            [clip_width/2 - clip_top_width/2,resulting_height],
+            [clip_width/2 + clip_top_width/2,resulting_height],
+    ]);
   }
 
   round_clipper(-clip_bottom_angle, clip_bottom_width);
@@ -91,8 +109,9 @@ module clip(units_z) {
   translate([clip_width/2 - clip_top_width/2, resulting_height,0]) {
     round_clipper(clip_top_angle,clip_top_width);
     // Handle
-    translate([0,-clip_thickness,-clip_handle_length])
-      cube([clip_top_width,clip_thickness,clip_handle_length]);
+    translate([0,0,sin(clip_handle_angle)*clip_thickness]) rotate([clip_handle_angle,0,0])
+      translate([0,-clip_thickness,-clip_handle_length])
+        cube([clip_top_width,clip_thickness,clip_handle_length]);
   }
 }
 
