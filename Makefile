@@ -17,7 +17,9 @@ BITSTORAGE_SIZES = $(STLDIR)/bitstorage_1x1x6.35.stl $(STLDIR)/bitstorage_1x2x6.
 
 SIMPLEBOX_SIZES = $(STLDIR)/simplebox_1x1x4.stl $(STLDIR)/simplebox_2x1x4.stl $(STLDIR)/simplebox_2x1x3.stl \
 		  $(STLDIR)/simplebox_3x1x4.stl $(STLDIR)/simplebox_3x1x3.stl $(STLDIR)/simplebox_2x2x4.stl \
-		  $(STLDIR)/simplebox_2x2x4.stl
+		  $(STLDIR)/simplebox_2x2x4.stl $(STLDIR)/simplebox_2x1x5.stl $(STLDIR)/simplebox_2x2x5.stl \
+		  $(STLDIR)/simplebox_3x1x5.stl
+
 
 CASE_CLIP_SIZES = $(STLDIR)/case_clip_2.stl $(STLDIR)/case_clip_3.stl $(STLDIR)/case_clip_4.stl $(STLDIR)/case_clip_5.stl \
 		  $(STLDIR)/case_clip_6.stl $(STLDIR)/case_clip_7.stl $(STLDIR)/case_clip_8.stl $(STLDIR)/case_clip_9.stl \
