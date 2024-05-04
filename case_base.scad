@@ -78,28 +78,33 @@ module clip(units_z) {
   straight_part=clip_straight_part;
   straight_offset = resulting_height - straight_part;
 
-  linear_extrude(clip_thickness) {
-    polygon([[0,straight_part],[clip_bottom_width,straight_part],
-            [clip_width/2 + clip_top_width/2,straight_offset],
-            [clip_width/2 - clip_top_width/2,straight_offset] ]);
+  difference() {
+    linear_extrude(clip_thickness) {
+      polygon([[0,straight_part],[clip_bottom_width,straight_part],
+              [clip_width/2 + clip_top_width/2,straight_offset],
+              [clip_width/2 - clip_top_width/2,straight_offset] ]);
 
-    polygon([[clip_width - clip_bottom_width,straight_part],[clip_width ,straight_part],
-            [clip_width/2 + clip_top_width/2,straight_offset],
-            [clip_width/2 - clip_top_width/2,straight_offset] ]);
+      polygon([[clip_width - clip_bottom_width,straight_part],[clip_width ,straight_part],
+              [clip_width/2 + clip_top_width/2,straight_offset],
+              [clip_width/2 - clip_top_width/2,straight_offset] ]);
 
-    //Straight end Bottom
-    polygon([[0,0],[clip_bottom_width,0],[clip_bottom_width,straight_part],[0,straight_part]]);
+      //Straight end Bottom
+      polygon([[0,0],[clip_bottom_width,0],[clip_bottom_width,straight_part],[0,straight_part]]);
 
-    polygon([[clip_width - clip_bottom_width,0],[clip_width ,0],
-             [clip_width ,straight_part],[clip_width - clip_bottom_width,straight_part]]);
+      polygon([[clip_width - clip_bottom_width,0],[clip_width ,0],
+               [clip_width ,straight_part],[clip_width - clip_bottom_width,straight_part]]);
 
-    // straight end Top
-    polygon([
-            [clip_width/2 + clip_top_width/2,straight_offset],
-            [clip_width/2 - clip_top_width/2,straight_offset],
-            [clip_width/2 - clip_top_width/2,resulting_height],
-            [clip_width/2 + clip_top_width/2,resulting_height],
-    ]);
+      // straight end Top
+      polygon([
+              [clip_width/2 + clip_top_width/2,straight_offset],
+              [clip_width/2 - clip_top_width/2,straight_offset],
+              [clip_width/2 - clip_top_width/2,resulting_height],
+              [clip_width/2 + clip_top_width/2,resulting_height],
+      ]);
+    }
+    // Embossed number
+    linear_extrude(clip_thickness/4) translate([clip_width/2,resulting_height*0.9])
+      mirror([1,0,0]) text(str(units_z), halign="center", valign="top");
   }
 
   round_clipper(-clip_bottom_angle, clip_bottom_width);
