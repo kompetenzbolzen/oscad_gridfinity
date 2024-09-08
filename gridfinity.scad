@@ -17,6 +17,10 @@ function gf_top(units_z) =
 function gf_top_vec(units_z) =
   [0,0,gf_top(units_z)];
 
+function gf_inner_bottom() = (4.75 + minimal_thickness);
+function gf_inner_bottom_vec() = [0,0,gf_inner_bottom()];
+
+
 // Get center of GridFinity object
 function gf_center(units_x, units_y) = [
   (units_x * width - 0.5) / 2 - width/2,
