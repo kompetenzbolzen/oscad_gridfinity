@@ -1,4 +1,5 @@
 *.gcode
 *.3mf
+*.stl
 stlout/
 pngout/
