@@ -44,8 +44,12 @@ stl: $(STLDIR) $(STL)
 $(STLDIR)/gridfinity.stl: gridfinity.scad
 	@echo
 
-$(STLDIR)/psu.stl: $(BITSTORAGE_SIZES)
+$(STLDIR)/psu.stl: psu.scad
 	@echo
+
+$(STLDIR)/psu_%.stl: psu.scad
+	@echo [ STL ] $< $*
+	@$(SCAD) $(STLOPTS) -o $@ psu_$*.scad
 
 $(STLDIR)/bitstorage_%.stl: bitstorage.scad
 	@echo [ STL ] $< $*
