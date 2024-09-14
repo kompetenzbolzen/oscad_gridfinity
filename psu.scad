@@ -23,6 +23,8 @@ usb_x = 11.6 + tol;
 usb_y = 21.5 + tol;
 usb_z = 1    + tol;
 
+usb_location = [100,0,0];
+
 module module_negative() {
 	rotate([90,0,0]) linear_extrude(5) {
 		translate([-2,      module_y/2 - module_clip_width/2]) square([2,module_clip_width]);
@@ -46,17 +48,30 @@ module usb_hole_negative() {
 	translate([-1,-5,0]) cube([usb_x+2,5,8]);
 }
 
-usb_location = [100,0,0];
+module psu_lid() {
+	gridfinity(ux, uy, 1, lip=true, magnets=false, fill = false, bottom_height = 0);
+}
 
-difference() {
-	gridfinity(ux, uy, uz, lip=true, magnets=false, fill = false, bottom_height = 0);
-	translate(concat(gf_inner_origin(), [gf_inner_bottom()])) {
-		translate([5,0,10]) module_negative();
-		translate([90,0,15]) plug_negative();
-		translate([90,0,15+plug_distance]) plug_negative();
-		translate(usb_location) usb_hole_negative();
+module psu_cover() {
+	difference() {
+		gridfinity(ux, uy, uz + 1, lip=true, magnets=false, fill = false, bottom_height = 0);
+		translate(concat(gf_inner_origin(), [gf_inner_bottom()])) {
+			translate([0,-5,0]) cube([gf_inner(ux),5,gf_top(uz+1)-gf_inner_bottom() + 5]);
+		}
 	}
 }
 
-translate(concat(gf_inner_origin(), [gf_inner_bottom()]))
-	translate(usb_location) usb_inset();
+module psu_main() {
+	difference() {
+		gridfinity(ux, uy, uz, lip=true, magnets=false, fill = false, bottom_height = 0);
+		translate(concat(gf_inner_origin(), [gf_inner_bottom()])) {
+			translate([5,0,10]) module_negative();
+			translate([90,0,15]) plug_negative();
+			translate([90,0,15+plug_distance]) plug_negative();
+			translate(usb_location) usb_hole_negative();
+		}
+	}
+
+	translate(concat(gf_inner_origin(), [gf_inner_bottom()]))
+		translate(usb_location) usb_inset();
+}
