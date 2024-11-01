@@ -30,6 +30,8 @@ CASE_BASE_SIZES = $(STLDIR)/case_base_2x1.stl $(STLDIR)/case_base_2x2.stl $(STLD
 		  $(STLDIR)/case_base_4x4.stl $(STLDIR)/case_base_4x5.stl $(STLDIR)/case_base_4x6.stl \
 		  $(STLDIR)/case_base_5x5.stl
 
+DIP_SIZES =	  $(STLDIR)/dip_1x1.stl $(STLDIR)/dip_2x1.stl $(STLDIR)/dip_2x2.stl $(STLDIR)/dip_2x3.stl $(STLDIR)/dip_3x3.stl
+
 .PHONY: _default
 _default: stl
 
@@ -88,6 +90,15 @@ $(STLDIR)/case_base_%.stl: case_base.scad
 		-o $@ $<
 
 $(STLDIR)/case_base.stl: $(CASE_BASE_SIZES)
+	@echo
+
+$(STLDIR)/dip_%.stl: dip.scad
+	@echo [ STL ] $< $*
+	@$(SCAD) $(STLOPTS) \
+		-D ux=$(firstword $(subst x, ,$*)) -D uy=$(word 2,$(subst x, ,$*)) \
+		-o $@ $<
+
+$(STLDIR)/dip.stl: $(DIP_SIZES)
 	@echo
 
 # Generic Builds
