@@ -3,13 +3,13 @@ use <gridfinity.scad>
 tol = 0.5;
 
 ux = 2;
-uy = 3;
+uy = 2;
 uz = 3;
 
 magnets = false;
 
 outer_diam_real = 21.5;
-inner_diam_real = 13.5;
+inner_diam_real = 13.7;
 inner_depth_real = 5;
 
 outer_diam = outer_diam_real + tol;
